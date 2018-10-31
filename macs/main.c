@@ -14,38 +14,12 @@
 
 extern uint8_t fastmap(uint8_t original);
 
-struct command_t {
-	int16_t moments[3];
-};
-
-/*
- *	Parse the command.
- *  Format: D [-](0-200) [-](0-200) [-](0-200)\n
- */
-struct command_t parseCommand(char *cmd, uint8_t length) {
-	struct command_t command;
-	uint8_t cnt = 0;
-	uint8_t last_occurance = 2;
-	/* split string by whitespace */
-	for(int i = 2; i < length; i++) {
-		if(cmd[i] == ' ') {
-			cmd[i] = '\0';
-			command.moments[cnt++] = atoi(&cmd[last_occurance]);
-			last_occurance = i+1;
-		}
-	}
-	
-	command.moments[cnt++] = atoi(&cmd[last_occurance]);
-	return command;
-}
-
-
-void executeCommand(struct command_t *cmd) {
+void executeCommand(struct setpoint_t *cmd) {
 	
 	/* scale inputs */
-	int16_t xCycle = cmd->moments[0];
-	int16_t yCycle = cmd->moments[1];
-	int16_t zCycle = cmd->moments[2];
+	int16_t xCycle = cmd->x;
+	int16_t yCycle = cmd->y;
+	int16_t zCycle = cmd->z;
 	
 	if(xCycle < 0)
 	{
@@ -97,26 +71,25 @@ void executeCommand(struct command_t *cmd) {
 }
 
 
-void printCommand(struct command_t *cmd)
+void printCommand(struct setpoint_t *cmd)
 {
 	serial_puts("NEW TARGET: [");
 	char buffer[7];
-	itoa(cmd->moments[0], buffer, 10);
+	itoa(cmd->x, buffer, 10);
 	serial_puts(buffer);
 	serial_putc(' ');
-	itoa(cmd->moments[1], buffer, 10);
+	itoa(cmd->y, buffer, 10);
 	serial_puts(buffer);
 	serial_putc(' ');
-	itoa(cmd->moments[2], buffer, 10);
+	itoa(cmd->z, buffer, 10);
 	serial_puts(buffer);
-	serial_puts("]\n");
+	serial_puts("]\r");
 }
 
 int main(void)
 {
 	serial_init(UBRR);
-	serial_putc(0x11);
-	serial_puts("MACS FW V1.0 OCT 2018\n\n");
+	serial_puts("MACS FW V1.0 OCT 2018\r");
 		
 	yTorquerInitialize();
 	xTorquerInitialize();
@@ -126,38 +99,26 @@ int main(void)
 	
 	uint8_t index = 0;
 	char buffer[32];
+	struct setpoint_t setp;
     while (1) 
     {				
 		if(serial_available())
 		{
-			// pause
-			//serial_putc(0x13);
-			//if(parseNextCharacter(serial_getchar()) == PARSER_COMPLETE)
-			//{
-				//// get command and execute it
-			//}
-			
-			//if(data != '\r' || data != '\n')
-			//{
-				//buffer[index++] = data;
-			//}
-			//else
-			//{
-				////serial_puts("CMD\n");
-				//buffer[index] = '\0';
-				//struct command_t cmd = parseCommand(buffer, index);
-				////printCommand(&cmd);
-				////serial_puts("EXEC CMD\n");
-				//
-				//executeCommand(&cmd);				
-				//index = 0;
-			//}
+			char data = serial_getchar();
+			if(data != '\r' && data != '\n')
+			{
+				buffer[index++] = data;
+			}
+			else
+			{
+				buffer[index] = '\0';
+				if(parseString(buffer, &setp) == PARSER_OK)
+				{
+					executeCommand(&setp);
+				}
+				index = 0;
+			}
 		}
-		//else
-		//{
-			//// continue
-			//serial_putc(0x11);
-		//}
     }
 }
 
