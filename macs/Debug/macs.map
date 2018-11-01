@@ -257,7 +257,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x5c2
+.text           0x00000000      0x5b2
  *(.vectors)
  .vectors       0x00000000       0x68 D:/AtmelStudio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
                 0x00000000                __vector_default
@@ -348,101 +348,101 @@ END GROUP
  .text.executeCommand
                 0x000000c2       0xa8 main.o
                 0x000000c2                executeCommand
- .text.main     0x0000016a       0x9e main.o
+ .text.main     0x0000016a       0x8e main.o
                 0x0000016a                main
  .text.parseString
-                0x00000208      0x114 parser.o
-                0x00000208                parseString
- .text.rb_init  0x0000031c        0xa serial/ringbuffer.o
-                0x0000031c                rb_init
+                0x000001f8      0x114 parser.o
+                0x000001f8                parseString
+ .text.rb_init  0x0000030c        0xa serial/ringbuffer.o
+                0x0000030c                rb_init
  .text.rb_isEmpty
-                0x00000326        0xe serial/ringbuffer.o
-                0x00000326                rb_isEmpty
+                0x00000316        0xe serial/ringbuffer.o
+                0x00000316                rb_isEmpty
  .text.rb_write
-                0x00000334       0x2a serial/ringbuffer.o
-                0x00000334                rb_write
- .text.rb_read  0x0000035e       0x20 serial/ringbuffer.o
-                0x0000035e                rb_read
+                0x00000324       0x2a serial/ringbuffer.o
+                0x00000324                rb_write
+ .text.rb_read  0x0000034e       0x20 serial/ringbuffer.o
+                0x0000034e                rb_read
  .text.__vector_18
-                0x0000037e       0x50 serial/serial.o
-                0x0000037e                __vector_18
+                0x0000036e       0x50 serial/serial.o
+                0x0000036e                __vector_18
  .text.serial_init
-                0x000003ce       0x36 serial/serial.o
-                0x000003ce                serial_init
+                0x000003be       0x36 serial/serial.o
+                0x000003be                serial_init
  .text.serial_putc
-                0x00000404       0x10 serial/serial.o
-                0x00000404                serial_putc
+                0x000003f4       0x10 serial/serial.o
+                0x000003f4                serial_putc
  .text.serial_puts
-                0x00000414       0x1e serial/serial.o
-                0x00000414                serial_puts
+                0x00000404       0x1e serial/serial.o
+                0x00000404                serial_puts
  .text.serial_available
-                0x00000432       0x12 serial/serial.o
-                0x00000432                serial_available
+                0x00000422       0x12 serial/serial.o
+                0x00000422                serial_available
  .text.serial_getchar
-                0x00000444        0xa serial/serial.o
-                0x00000444                serial_getchar
+                0x00000434        0xa serial/serial.o
+                0x00000434                serial_getchar
  .text.xTorquerInitialize
-                0x0000044e       0x12 torquer/torquer.o
-                0x0000044e                xTorquerInitialize
+                0x0000043e       0x12 torquer/torquer.o
+                0x0000043e                xTorquerInitialize
  .text.yTorquerInitialize
-                0x00000460        0xe torquer/torquer.o
-                0x00000460                yTorquerInitialize
+                0x00000450        0xe torquer/torquer.o
+                0x00000450                yTorquerInitialize
  .text.zTorquerInitialize
-                0x0000046e       0x12 torquer/torquer.o
-                0x0000046e                zTorquerInitialize
+                0x0000045e       0x12 torquer/torquer.o
+                0x0000045e                zTorquerInitialize
  .text.xTorquerDisable
-                0x00000480       0x10 torquer/torquer.o
-                0x00000480                xTorquerDisable
+                0x00000470       0x10 torquer/torquer.o
+                0x00000470                xTorquerDisable
  .text.yTorquerDisable
-                0x00000490        0xe torquer/torquer.o
-                0x00000490                yTorquerDisable
+                0x00000480        0xe torquer/torquer.o
+                0x00000480                yTorquerDisable
  .text.zTorquerDisable
-                0x0000049e        0xc torquer/torquer.o
-                0x0000049e                zTorquerDisable
+                0x0000048e        0xc torquer/torquer.o
+                0x0000048e                zTorquerDisable
  .text.torquerEnable
-                0x000004aa        0x4 torquer/torquer.o
-                0x000004aa                torquerEnable
+                0x0000049a        0x4 torquer/torquer.o
+                0x0000049a                torquerEnable
  .text.xTorquerEnableChannelA
-                0x000004ae       0x14 torquer/torquer.o
-                0x000004ae                xTorquerEnableChannelA
+                0x0000049e       0x14 torquer/torquer.o
+                0x0000049e                xTorquerEnableChannelA
  .text.xTorquerEnableChannelB
-                0x000004c2       0x14 torquer/torquer.o
-                0x000004c2                xTorquerEnableChannelB
+                0x000004b2       0x14 torquer/torquer.o
+                0x000004b2                xTorquerEnableChannelB
  .text.yTorquerEnableChannelA
-                0x000004d6       0x14 torquer/torquer.o
-                0x000004d6                yTorquerEnableChannelA
+                0x000004c6       0x14 torquer/torquer.o
+                0x000004c6                yTorquerEnableChannelA
  .text.yTorquerEnableChannelB
-                0x000004ea       0x14 torquer/torquer.o
-                0x000004ea                yTorquerEnableChannelB
+                0x000004da       0x14 torquer/torquer.o
+                0x000004da                yTorquerEnableChannelB
  .text.zTorquerEnableChannelA
-                0x000004fe        0xe torquer/torquer.o
-                0x000004fe                zTorquerEnableChannelA
+                0x000004ee        0xe torquer/torquer.o
+                0x000004ee                zTorquerEnableChannelA
  .text.zTorquerEnableChannelB
-                0x0000050c        0xe torquer/torquer.o
-                0x0000050c                zTorquerEnableChannelB
+                0x000004fc        0xe torquer/torquer.o
+                0x000004fc                zTorquerEnableChannelB
  .text.xTorquerSetDutyCycle
-                0x0000051a       0x1c torquer/torquer.o
-                0x0000051a                xTorquerSetDutyCycle
+                0x0000050a       0x1c torquer/torquer.o
+                0x0000050a                xTorquerSetDutyCycle
  .text.yTorquerSetDutyCycle
-                0x00000536       0x12 torquer/torquer.o
-                0x00000536                yTorquerSetDutyCycle
+                0x00000526       0x12 torquer/torquer.o
+                0x00000526                yTorquerSetDutyCycle
  .text.zTorquerSetDutyCycle
-                0x00000548        0xc torquer/torquer.o
-                0x00000548                zTorquerSetDutyCycle
+                0x00000538        0xc torquer/torquer.o
+                0x00000538                zTorquerSetDutyCycle
  .text.avr-libc
-                0x00000554        0xa d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok.o)
-                0x00000554                strtok
+                0x00000544        0xa d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok.o)
+                0x00000544                strtok
  .text.avr-libc
-                0x0000055e       0x12 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcmp.o)
-                0x0000055e                strcmp
+                0x0000054e       0x12 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strcmp.o)
+                0x0000054e                strcmp
  .text.avr-libc
-                0x00000570       0x4e d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok_r.o)
-                0x00000570                strtok_r
-                0x000005be                . = ALIGN (0x2)
+                0x00000560       0x4e d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok_r.o)
+                0x00000560                strtok_r
+                0x000005ae                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000005be        0x0 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
-                0x000005be                _exit
-                0x000005be                exit
+ .fini9         0x000005ae        0x0 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+                0x000005ae                _exit
+                0x000005ae                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -461,44 +461,43 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000005be        0x4 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
+ .fini0         0x000005ae        0x4 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr5\libgcc.a(_exit.o)
  *(.fini0)
-                0x000005c2                _etext = .
+                0x000005b2                _etext = .
 
-.data           0x00800100       0x34 load address 0x000005c2
+.data           0x00800100       0x2c load address 0x000005b2
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
  *(.rodata)
  *(.rodata*)
  .rodata.str1.1
-                0x00800100       0x2f main.o
+                0x00800100       0x28 main.o
  .rodata.str1.1
-                0x0080012f        0x4 parser.o
+                0x00800128        0x4 parser.o
  *(.gnu.linkonce.d*)
-                0x00800134                . = ALIGN (0x2)
- *fill*         0x00800133        0x1 
-                0x00800134                _edata = .
-                0x00800134                PROVIDE (__data_end, .)
+                0x0080012c                . = ALIGN (0x2)
+                0x0080012c                _edata = .
+                0x0080012c                PROVIDE (__data_end, .)
 
-.bss            0x00800134       0x88
-                0x00800134                PROVIDE (__bss_start, .)
+.bss            0x0080012c       0x88
+                0x0080012c                PROVIDE (__bss_start, .)
  *(.bss)
- .bss           0x00800134        0x2 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok.o)
+ .bss           0x0080012c        0x2 d:/atmelstudio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr5\libc.a(strtok.o)
  *(.bss*)
  *(COMMON)
- COMMON         0x00800136       0x86 serial/serial.o
-                0x00800136                rb_recv
-                0x00800179                rb_transmit
-                0x008001bc                PROVIDE (__bss_end, .)
-                0x000005c2                __data_load_start = LOADADDR (.data)
-                0x000005f6                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x0080012e       0x86 serial/serial.o
+                0x0080012e                rb_recv
+                0x00800171                rb_transmit
+                0x008001b4                PROVIDE (__bss_end, .)
+                0x000005b2                __data_load_start = LOADADDR (.data)
+                0x000005de                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x008001bc        0x0
+.noinit         0x008001b4        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x008001bc                _end = .
+                0x008001b4                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -586,15 +585,15 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x169c
+.debug_info     0x00000000     0x1664
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x5f4 D:/AtmelStudio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_info    0x000005f4      0x6db main.o
- .debug_info    0x00000ccf      0x237 parser.o
- .debug_info    0x00000f06      0x247 serial/ringbuffer.o
- .debug_info    0x0000114d      0x2aa serial/serial.o
- .debug_info    0x000013f7      0x232 torquer/torquer.o
- .debug_info    0x00001629       0x73 utility/fastmap.o
+ .debug_info    0x000005f4      0x6a3 main.o
+ .debug_info    0x00000c97      0x237 parser.o
+ .debug_info    0x00000ece      0x247 serial/ringbuffer.o
+ .debug_info    0x00001115      0x2aa serial/serial.o
+ .debug_info    0x000013bf      0x232 torquer/torquer.o
+ .debug_info    0x000015f1       0x73 utility/fastmap.o
 
 .debug_abbrev   0x00000000      0xc16
  *(.debug_abbrev)
@@ -606,15 +605,15 @@ END GROUP
  .debug_abbrev  0x00000b4f       0xb3 torquer/torquer.o
  .debug_abbrev  0x00000c02       0x14 utility/fastmap.o
 
-.debug_line     0x00000000      0xb55
+.debug_line     0x00000000      0xb43
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x133 D:/AtmelStudio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega328p/avr5/crtatmega328p.o
- .debug_line    0x00000133      0x25a main.o
- .debug_line    0x0000038d      0x148 parser.o
- .debug_line    0x000004d5      0x153 serial/ringbuffer.o
- .debug_line    0x00000628      0x17d serial/serial.o
- .debug_line    0x000007a5      0x320 torquer/torquer.o
- .debug_line    0x00000ac5       0x90 utility/fastmap.o
+ .debug_line    0x00000133      0x248 main.o
+ .debug_line    0x0000037b      0x148 parser.o
+ .debug_line    0x000004c3      0x153 serial/ringbuffer.o
+ .debug_line    0x00000616      0x17d serial/serial.o
+ .debug_line    0x00000793      0x320 torquer/torquer.o
+ .debug_line    0x00000ab3       0x90 utility/fastmap.o
 
 .debug_frame    0x00000000      0x33c
  *(.debug_frame)
@@ -638,12 +637,12 @@ END GROUP
  .debug_str     0x00000658       0x31 torquer/torquer.o
                                 0x2cc (size before relaxing)
 
-.debug_loc      0x00000000      0x8ed
+.debug_loc      0x00000000      0x8e2
  *(.debug_loc)
- .debug_loc     0x00000000      0x303 main.o
- .debug_loc     0x00000303      0x2be parser.o
- .debug_loc     0x000005c1      0x178 serial/ringbuffer.o
- .debug_loc     0x00000739      0x1b4 serial/serial.o
+ .debug_loc     0x00000000      0x2f8 main.o
+ .debug_loc     0x000002f8      0x2be parser.o
+ .debug_loc     0x000005b6      0x178 serial/ringbuffer.o
+ .debug_loc     0x0000072e      0x1b4 serial/serial.o
 
 .debug_macinfo
  *(.debug_macinfo)
