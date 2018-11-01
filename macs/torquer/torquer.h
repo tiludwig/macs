@@ -46,9 +46,32 @@
 #define TIM2_TCCR2B_DISABLE			(0)
 #define TIM2_TCCR2B_ENABLE			((1 << CS21))
 
+struct TIM1
+{
+	uint8_t TCCRA;
+	uint8_t TCCRB;
+	uint8_t TCCRC;
+	uint8_t TCNTL;
+	uint8_t TCNTH;
+	uint8_t ICRL;
+	uint8_t ICRH;
+	uint8_t OCRAL;
+	uint8_t OCRAH;
+	uint8_t OCRBL;
+	uint8_t OCRBH;
+};
 
+struct TIM0
+{
+	uint8_t TCCRA;
+	uint8_t TCCRB;
+};
 
+#define TIM1_BASE				(0x84)
+#define TORQUER_X		((volatile struct TIM1 *)(TIM1_BASE))
 
+#define TIM0_BASE				(0x44)
+#define TORQUER_Z		((volatile struct TIM0*)(TIM0_BASE))
 
 void xTorquerInitialize();
 void yTorquerInitialize();
