@@ -44,8 +44,8 @@ void zTorquerInitialize()
 
 void xTorquerDisable()
 {
-	TCCR1A = 0;
-	TCCR1B = TIM1_TCCR1B_DISABLE;
+	TORQUER_X->TCCRA = 0;
+	TORQUER_X->TCCRB = TIM1_TCCR1B_DISABLE;
 	
 	TIM1_CHANNEL_PORT &= ~(TIM1_CHANNEL_A_PIN | TIM1_CHANNEL_B_PIN);
 }
