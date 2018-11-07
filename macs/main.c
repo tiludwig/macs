@@ -14,8 +14,13 @@
 
 extern uint8_t fastmap(uint8_t original);
 
+static struct setpoint_t lastExecutedCmd;
+
 void executeCommand(struct setpoint_t *cmd) {
 	
+	lastExecutedCmd.x = cmd->x;
+	lastExecutedCmd.y = cmd->y;
+	lastExecutedCmd.z = cmd->z;
 	/* scale inputs */
 	int16_t xCycle = cmd->x;
 	int16_t yCycle = cmd->y;
@@ -100,8 +105,14 @@ int main(void)
 	uint8_t index = 0;
 	char buffer[32];
 	struct setpoint_t setp;
+	
+	uint16_t lastMeasurementTime = getTimestamp();
+	uint16_t currentTime;
+	enum MEASURESTATE {IDLE, STOPING_TORQUER, MEASURING, STARTING_TORQER};
+	enum MEASURESTATE measureState = IDLE;
     while (1) 
-    {				
+    {	
+		currentTime = getTimestamp();
 		if(serial_available())
 		{
 			char data = serial_getchar();
@@ -117,6 +128,54 @@ int main(void)
 					executeCommand(&setp);
 				}
 				index = 0;
+			}
+		}
+		
+		switch(measureState)
+		{
+			case IDLE:
+			{
+				if((currentTime - lastMeasurementTime) >= 781)
+				{
+					lastMeasurementTime = currentTime;
+					//serial_puts("Stoping torquer.\r");
+					torquerDisableAll();
+					measureState = STOPING_TORQUER;
+				}
+				break;
+			}
+			case STOPING_TORQUER:
+			{
+				if((currentTime - lastMeasurementTime) >= 196)
+				{
+					//serial_puts("starting measurement.\r");
+					measureState = MEASURING;
+				}
+				break;
+			}
+			case MEASURING:
+			{
+
+				if((currentTime - lastMeasurementTime) >= 2*196)
+				{
+					//serial_puts("starting torquers.\r");
+					
+					// replay last command executed
+					torquerEnable();
+					executeCommand(&lastExecutedCmd);
+					
+					measureState = STARTING_TORQER;
+				}
+				break;
+			}
+			case STARTING_TORQER:
+			{
+				if((currentTime - lastMeasurementTime) >= 3*196)
+				{
+					//serial_puts("nominal operation.\r");
+					measureState = IDLE;
+				}
+				break;
 			}
 		}
     }

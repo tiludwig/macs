@@ -6,8 +6,26 @@
  */ 
 
 #include <avr/io.h>
+#include <avr/interrupt.h>
 #include "torquer.h"
 
+static volatile uint16_t timebase = 0;
+
+static uint8_t timer0_lastState = 0;
+
+ISR(TIMER0_OVF_vect)
+{
+	// called every 256us
+	timebase++;
+}
+
+uint16_t getTimestamp()
+{
+	cli();
+	uint16_t currentTime = timebase;
+	sei();
+	return currentTime;
+}
 
 void xTorquerInitialize()
 {
@@ -33,12 +51,19 @@ void yTorquerInitialize()
 
 void zTorquerInitialize()
 {
+	
 	TORQUER_SLEEP_DDR |= TORQUER_SLEEP_PIN;
 	TORQUER_ENABLE_SLEEP();
 	/* z torquer is mapped to 8-bit timer 0 */
 	/* configure i/o lines */
 	DDRD |= TIM0_CHANNEL_A_PIN | TIM0_CHANNEL_B_PIN;
 	TIM0_CHANNEL_PORT &= ~(TIM0_CHANNEL_A_PIN | TIM0_CHANNEL_B_PIN);
+	
+	TCNT0 = 0;
+	TCCR0A = TIM0_TCCR0A_BASE_CFG;
+	TIMSK0 = (1 << TOIE0);
+	TCCR0B = TIM0_TCCR0B_ENABLE;
+	sei();
 }
 
 
@@ -60,8 +85,9 @@ void yTorquerDisable()
 
 void zTorquerDisable()
 {
-	TCCR0A = 0;
-	TCCR0B = TIM0_TCCR0B_DISABLE;
+	// disconnect output ports
+	timer0_lastState = TCCR0A;
+	TCCR0A = TIM0_TCCR0A_BASE_CFG;
 	// output low
 	TIM0_CHANNEL_PORT &= ~(TIM0_CHANNEL_A_PIN | TIM0_CHANNEL_B_PIN);
 }
@@ -132,28 +158,27 @@ void yTorquerEnableChannelB()
 
 void zTorquerEnableChannelA()
 {
-	TCCR0B = TIM0_TCCR0B_DISABLE;
+	//TCCR0B = TIM0_TCCR0B_DISABLE;
 	/* switch to channel A*/
 	TCCR0A = TIM0_TCCR0A_CHANNEL_A;
 
 	/* put inactive channel to low level */
 	TIM0_CHANNEL_PORT &= ~TIM0_CHANNEL_B_PIN;
-
 	/* re-enable timer */
-	TCCR0B = TIM0_TCCR0B_ENABLE;
+	//TCCR0B = TIM0_TCCR0B_ENABLE;
 }
 
 void zTorquerEnableChannelB()
 {
-	TCCR0B = TIM0_TCCR0B_DISABLE;
+	//TCCR0B = TIM0_TCCR0B_DISABLE;
 	/* switch to channel A*/
 	TCCR0A = TIM0_TCCR0A_CHANNEL_B;
 
 	/* put inactive channel to low level */
 	TIM0_CHANNEL_PORT &= ~TIM0_CHANNEL_A_PIN;
-
+	
 	/* re-enable timer */
-	TCCR0B = TIM0_TCCR0B_ENABLE;
+	//TCCR0B = TIM0_TCCR0B_ENABLE;
 }
 
 void xTorquerSetDutyCycle(uint8_t dutyCycle)
@@ -176,7 +201,7 @@ void zTorquerSetDutyCycle(uint8_t dutyCycle)
 {
 	if(dutyCycle == 0)
 	{
-		TCCR0B = TIM0_TCCR0B_DISABLE;
+		zTorquerDisable();
 	}
 	OCR0A = dutyCycle;
 	OCR0B = dutyCycle;

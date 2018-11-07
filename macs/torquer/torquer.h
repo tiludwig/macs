@@ -49,6 +49,7 @@
 
 
 
+uint16_t getTimestamp();
 
 void xTorquerInitialize();
 void yTorquerInitialize();
