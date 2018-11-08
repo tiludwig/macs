@@ -160,6 +160,9 @@
     <Compile Include="torquer\torquer.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="units\execution.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="utility\fastmap.s">
       <SubType>compile</SubType>
     </Compile>
@@ -170,6 +173,7 @@
   <ItemGroup>
     <Folder Include="eeprom" />
     <Folder Include="magnetometer" />
+    <Folder Include="units" />
     <Folder Include="utility" />
     <Folder Include="torquer" />
     <Folder Include="serial" />
