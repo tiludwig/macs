@@ -1,0 +1,9 @@
+Debug/
+
+
+Release/
+
+
+# user files
+*.atsuo
+.vs/
