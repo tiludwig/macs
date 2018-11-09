@@ -18,7 +18,6 @@ extern uint8_t fastmap(uint8_t original);
 
 static struct setpoint_t lastExecutedCmd;
 
-
 void executeCommand(struct setpoint_t *cmd) {
 	
 	lastExecutedCmd.x = cmd->x;

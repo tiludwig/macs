@@ -57,7 +57,7 @@ int main(void)
 		{
 			case IDLE:
 			{
-				if((currentTime - lastMeasurementTime) >= 781)
+				if((currentTime - lastMeasurementTime) >= 65000)
 				{
 					lastMeasurementTime = currentTime;
 					//serial_puts("Stoping torquer.\r");
