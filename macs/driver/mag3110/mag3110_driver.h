@@ -25,13 +25,38 @@
 #ifndef MAG3110_DRIVER_H_
 #define MAG3110_DRIVER_H_
 
+#define GLOBAL_FLAGS	_SFR_IO8(0x1E)
+
+#include <avr/io.h>
+
+/*
+ *	MAG3110 measurement result structure
+ *	
+ *	Entries correspond to the measured magnetic intensity on x,y and z axis.
+ */
+struct mag3110_result_t
+{
+	int16_t x;
+	int16_t y;
+	int16_t z;	
+};
+
 /*
  *	Initializes the MAG3110 to the following mode:
- *	Frequency:			80 Hz
- *  Over-sampling rate: 128 (reduces output data rate to 10Hz)
- *  
+ *	
+ *	Frequency:			0.63Hz
+ *  Over-sampling rate: 128 (reduces output data rate to 0.08Hz)
+ *  Reset:				automatic reset before every measurement
+ *	Output format:		raw (no user offset correction)
  */
 uint8_t mag3110_init();
 
-
+/*
+ *	Takes a measurement from the MAG3110
+ *	
+ *	Since the device is configured to active mode, triggering an immediate
+ *	measurement will increase the output frequency to the highest level (10 Hz).
+ *  A measurement result will be available after a maximum of 100ms.
+ */
+struct mag3110_result_t mag3110_takeMeasurement();
 #endif /* MAG3110_DRIVER_H_ */
