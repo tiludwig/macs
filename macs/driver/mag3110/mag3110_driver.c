@@ -1,5 +1,5 @@
 /*
- *	ATmega328P/PB UART Driver
+ *	NXP MAG3110 Basic Driver
  *
  * Copyright 2018 Tim Ludwig
  * 
@@ -19,9 +19,10 @@
  * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
  * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */ 
+ */
 
 #include "mag3110_driver.h"
+#include "mag3110_defines.h"
 #include <avr/interrupt.h>
 
 /*
