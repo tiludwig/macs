@@ -34,18 +34,49 @@
  #define RINGBUFFER_SIZE	64
  #define RINGBUFFER_SIZE_MSK	(RINGBUFFER_SIZE - 1)
 
- struct ringbuffer_t
- {
-	 uint8_t head;
-	 uint8_t tail;
-	 uint8_t overflow;
-	 uint8_t buffer[RINGBUFFER_SIZE];
- };
+/*
+ *	RingBuffer structure
+ *
+ *	Every instance of this structure is equivalent to a new ringbuffer
+ */
+struct ringbuffer_t
+{
+	uint8_t head;
+	uint8_t tail;
+	uint8_t overflow;
+	uint8_t buffer[RINGBUFFER_SIZE];
+};
 
+/*
+ *	Initializes a ringbuffer
+ *	After initialization the ringbuffer is empty
+ */
 void rb_init(volatile struct ringbuffer_t *rb);
+
+/*
+ *	Checks if the ringbuffer is full
+ *	Returns: 1, if the buffer is full. 0 otherwise.
+ */
 uint8_t rb_isFull(volatile struct ringbuffer_t *rb);
+
+/*
+ *	Checks if the ringbuffer is empty
+ *	Returns: 1, if the buffer is full. 0 otherwise.
+ */
 uint8_t rb_isEmpty(volatile struct ringbuffer_t *rb);
+
+/*
+ *	Writes data to the ringbuffer
+ *	NOTE: If the ringbuffer is full, data will be dropped. 
+ *
+ *	data: The data to be written.
+ */
 void rb_write(volatile struct ringbuffer_t *rb, uint8_t data);
+
+/*
+ *	Reads the next data from the ringbuffer
+ *	Returns: 0, if the buffer is empty. Next data otherwise.
+ */
 uint8_t rb_read(volatile struct ringbuffer_t *rb);
  
  #endif

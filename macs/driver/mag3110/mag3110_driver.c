@@ -49,7 +49,7 @@ ISR(INT0_vect)
  */
 uint8_t mag3110_init()
 {
-
+	return 0;
 }
 
 /*
@@ -61,5 +61,5 @@ uint8_t mag3110_init()
  */
 struct mag3110_result_t mag3110_takeMeasurement()
 {
-
+	return struct mag3110_result_t;
 }

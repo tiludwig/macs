@@ -36,6 +36,13 @@
 
 #include <avr/io.h>
 
+/*
+ *	Dipole moment setpoint structure
+ *
+ *	This structure will be build up by the command parser.
+ *	It contains the received dipole moment setpoints for 
+ *  the x,y and z axis.
+ */
 struct setpoint_t
 {
 	int16_t x;
@@ -43,6 +50,15 @@ struct setpoint_t
 	int16_t z;	
 };
 
+/*
+ *	Parse a command string
+ *	Returns: PARSER_OK, if the command was parsed successfuly. PARSER_FAIL otherwise.
+ *	
+ *	buffer: The c-string to be parsed
+ *	setp:	The setpoint struct containing the dipole moment target values. A allocated
+ *			structure has to be supplied to the function. The function will alter the 
+ *			x, y, and z components of the structure.
+ */
 uint8_t parseString(char* buffer, struct setpoint_t *setp);
 
 

@@ -70,31 +70,121 @@
 
 
 
-
+/*
+ *	Gets the current system time
+ *
+ *	Time is measurement using timer 0. Because this timer also runs the z torquer,
+ *	the system time is measured in 256us ticks. Use this function to compute time
+ *	differences between two timestamps. 
+ */
 uint16_t getTimestamp();
 
+/*
+ *	Initializes the x torquer
+ *
+ *	After initialization the torquer is off.
+ */
 void xTorquerInitialize();
+
+/*
+ *	Initializes the y torquer
+ *
+ *	After initialization the torquer is off.
+ */
 void yTorquerInitialize();
+
+/*
+ *	Initializes the z torquer
+ *
+ *	After initialization the torquer is off.
+ */
 void zTorquerInitialize();
 
+
+/*
+ *	Disables the x torquer
+ */
 void xTorquerDisable();
+
+/*
+ *	Disables the y torquer
+ */
 void yTorquerDisable();
+
+/*
+ *	Disables the z torquer
+ */
 void zTorquerDisable();
 
-void torquerEnable();
+/*
+ *	Disables sleep mode for all three torquers
+ */
+void torquerDisableSleep();
+
+/*
+ *	Disables all torquers and enters sleep mode
+ */
 void torquerDisableAll();
 
+
+/*
+ *	Enable the output channel A for the x torqer
+ */
 void xTorquerEnableChannelA();
+
+/*
+ *	Enable the output channel B for the x torqer
+ */
 void xTorquerEnableChannelB();
 
+
+/*
+ *	Enable the output channel A for the y torqer
+ */
 void yTorquerEnableChannelA();
+
+/*
+ *	Enable the output channel B for the y torqer
+ */
 void yTorquerEnableChannelB();
 
+
+/*
+ *	Enable the output channel A for the z torqer
+ */
 void zTorquerEnableChannelA();
+
+/*
+ *	Enable the output channel B for the z torqer
+ */
 void zTorquerEnableChannelB();
 
+
+/*
+ *	Sets the duty cycle for the x torquer
+ *
+ *	This will set the duty cycle off both channels. Since only one channel can be active 
+ *	by design, this doesn't pose a problem. However, if the user is to manipulate the 
+ *	timer registers outside of this module, this has to be kept in mind.
+ */
 void xTorquerSetDutyCycle(uint8_t dutyCycle);
+
+/*
+ *	Sets the duty cycle for the y torquer
+ *
+ *	This will set the duty cycle off both channels. Since only one channel can be active 
+ *	by design, this doesn't pose a problem. However, if the user is to manipulate the 
+ *	timer registers outside of this module, this has to be kept in mind.
+ */
 void yTorquerSetDutyCycle(uint8_t dutyCycle);
+
+/*
+ *	Sets the duty cycle for the z torquer
+ *
+ *	This will set the duty cycle off both channels. Since only one channel can be active 
+ *	by design, this doesn't pose a problem. However, if the user is to manipulate the 
+ *	timer registers outside of this module, this has to be kept in mind.
+ */
 void zTorquerSetDutyCycle(uint8_t dutyCycle);
 
 

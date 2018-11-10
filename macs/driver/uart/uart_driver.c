@@ -28,6 +28,13 @@
 volatile struct ringbuffer_t rb_recv;
 volatile struct ringbuffer_t rb_transmit;
 
+/*
+ *	USART data received interrupt
+ *
+ *	This interrupt will be called everytime a full byte is received by the USART
+ *	peripheral. To reduce the risk of dropping data, because no other task is 
+ *	reading the data, a ringbuffer is used to temporarely store the received data.
+ */
 ISR(USART_RX_vect)
 {
 	uint8_t data = UDR0;
@@ -36,7 +43,10 @@ ISR(USART_RX_vect)
 }
 
 
-
+/*
+ *	Initializes the USART peripheral
+ *	Use the MAKE_UBRR macro to get ubrr for a given baudrate.
+ */
 void serial_init(uint16_t ubrr)
 {
 	rb_init(&rb_recv);
@@ -53,6 +63,13 @@ void serial_init(uint16_t ubrr)
 	sei();
 }
 
+/*
+ *	Output  a character
+ *	Outputs the character to the USART peripheral transmit buffer.
+ *
+ *	NOTE: This function blocks until the character is sent. At low 
+ *	baudrates this time can be high.
+ */
 void serial_putc(char character)
 {
 	/* Wait for empty transmit buffer */
@@ -61,6 +78,13 @@ void serial_putc(char character)
 	UDR0 = character;
 }
 
+/*
+ *	Output  a c-string
+ *	Outputs the c-string to the USART peripheral transmit buffer.
+ *
+ *	NOTE: This function blocks until the complete c-string is sent. 
+ *	At low baudrates this time can be high.
+ */
 void serial_puts(const char *string)
 {
 	while( *string != '\0')
@@ -70,11 +94,21 @@ void serial_puts(const char *string)
 	}
 }
 
+/*
+ *	Check if data is available
+ *	Returns: 1, if data is available. 0 otherwise.
+ */
 uint8_t serial_available()
 {
 	return (rb_isEmpty(&rb_recv) == 0);	
 }
 
+/*
+ *	Get the next character from the receive buffer
+ *	Returns: Data if available. 0 otherwise.
+ *
+ *	NOTE: 'serial_available' should be called prior to this function
+ */
 uint8_t serial_getchar()
 {
 	return rb_read(&rb_recv);

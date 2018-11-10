@@ -34,18 +34,46 @@
 #define BAUD 9600
 #endif
 
-#define UBRR (F_CPU / 16 / BAUD - 1)
+#define MAKE_UBRR (F_CPU / 16 / BAUD - 1)
 
 #include <avr/io.h>
 
+/*
+ *	Initializes the USART peripheral
+ *	Use the MAKE_UBRR macro to get ubrr for a given baudrate.
+ */
 void serial_init(uint16_t ubrr);
 
+/*
+ *	Output  a character
+ *	Outputs the character to the USART peripheral transmit buffer.
+ *
+ *	NOTE: This function blocks until the character is sent. At low 
+ *	baudrates this time can be high.
+ */
 void serial_putc(char character);
 
+/*
+ *	Output  a c-string
+ *	Outputs the c-string to the USART peripheral transmit buffer.
+ *
+ *	NOTE: This function blocks until the complete c-string is sent. 
+ *	At low baudrates this time can be high.
+ */
 void serial_puts(const char *string);
 
+/*
+ *	Check if data is available
+ *	Returns: 1, if data is available. 0 otherwise.
+ */
 uint8_t serial_available();
 
+/*
+ *	Get the next character from the receive buffer
+ *	Returns: Data if available. 0 otherwise.
+ *
+ *	NOTE: 'serial_available' should be called prior to this function
+ */
 uint8_t serial_getchar();
 
 #endif /* SERIAL_H_ */

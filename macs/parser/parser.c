@@ -30,6 +30,10 @@
 #include <string.h>
 #include "parser.h"
 
+/*
+ *	Convert a string to short (int16_t)
+ *	Returns: The numeric representation of the string value.
+ */
 static short str2short(const char *buffer)
 {
 	short tmpNum = 0;
@@ -49,6 +53,15 @@ static short str2short(const char *buffer)
 	return (isNegative == 1) ? -1*tmpNum : tmpNum;
 }
 
+/*
+ *	Parse a command string
+ *	Returns: PARSER_OK, if the command was parsed successfuly. PARSER_FAIL otherwise.
+ *	
+ *	buffer: The c-string to be parsed
+ *	setp:	The setpoint struct containing the dipole moment target values. A allocated
+ *			structure has to be supplied to the function. The function will alter the 
+ *			x, y, and z components of the structure.
+ */
 uint8_t parseString(char* buffer, struct setpoint_t *setp)
 {
 	char* token = strtok(buffer, " ");

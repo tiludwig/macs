@@ -33,17 +33,23 @@
 #include <parser/parser.h>
 #include <torquer/torquer.h>
 
-
+/*
+ *	Maps the [0, 200] input range to the [0, 255] output range
+ *
+ *	This function is implemented using assembler, see fastmap.s
+ *	for further information about the mapping algorithm.
+ */
 extern uint8_t fastmap(uint8_t original);
 
-static struct setpoint_t lastExecutedCmd;
-
-void executeCommand(struct setpoint_t *cmd) {
-	
-	lastExecutedCmd.x = cmd->x;
-	lastExecutedCmd.y = cmd->y;
-	lastExecutedCmd.z = cmd->z;
-	/* scale inputs */
+/*
+ *	Execute a command to set a new dipole moment for the torquers
+ *
+ *	This function decides, based on the target values, which channel should be active
+ *	at which duty cycle. This is done for every of the three axis. 
+ */
+void executeCommand(struct setpoint_t *cmd) 
+{
+		/* scale inputs */
 	int16_t xCycle = cmd->x;
 	int16_t yCycle = cmd->y;
 	int16_t zCycle = cmd->z;

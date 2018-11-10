@@ -33,16 +33,22 @@
 #include "torquer/torquer.h"
 #include "parser/parser.h"
 
+/*
+ *	Local 
+ */
+static struct setpoint_t lastExecutedCmd;
+
+
 int main(void)
 {
-	serial_init(UBRR);
+	serial_init(MAKE_UBRR);
 	serial_puts("MACS FW V1.0 OCT 2018\r");
 		
 	yTorquerInitialize();
 	xTorquerInitialize();
 	zTorquerInitialize();
 	
-	torquerEnable();
+	torquerDisableSleep();
 	
 	uint8_t index = 0;
 	char buffer[32];
@@ -68,6 +74,10 @@ int main(void)
 				if(parseString(buffer, &setp) == PARSER_OK)
 				{
 					executeCommand(&setp);
+					// store last command executed
+					lastExecutedCmd.x = setp.x:
+					lastExecutedCmd.y = setp.y:
+					lastExecutedCmd.z = setp.z:
 				}
 				index = 0;
 			}
@@ -103,7 +113,7 @@ int main(void)
 					//serial_puts("starting torquers.\r");
 					
 					// replay last command executed
-					torquerEnable();
+					torquerDisableSleep();
 					executeCommand(&lastExecutedCmd);
 					
 					measureState = STARTING_TORQER;

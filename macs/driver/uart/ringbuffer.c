@@ -27,9 +27,9 @@
 
 #include "ringbuffer.h"
 
-
 /*
- *	Initializes the ring buffer
+ *	Initializes a ringbuffer
+ *	After initialization the ringbuffer is empty
  */
 inline void rb_init(volatile struct ringbuffer_t *rb)
 {
@@ -40,6 +40,7 @@ inline void rb_init(volatile struct ringbuffer_t *rb)
 
 /*
  *	Checks if the ringbuffer is full
+ *	Returns: 1, if the buffer is full. 0 otherwise.
  */
 inline uint8_t rb_isFull(volatile struct ringbuffer_t *rb)
 {
@@ -48,7 +49,8 @@ inline uint8_t rb_isFull(volatile struct ringbuffer_t *rb)
 
 /*
  *	Checks if the ringbuffer is empty
- */	
+ *	Returns: 1, if the buffer is full. 0 otherwise.
+ */
 inline uint8_t rb_isEmpty(volatile struct ringbuffer_t *rb)
 {
 	return ((rb->tail - rb->head) == 0) ? 1 : 0;
@@ -56,7 +58,10 @@ inline uint8_t rb_isEmpty(volatile struct ringbuffer_t *rb)
 
 
 /*
- *	Writes a byte into the ringbuffer. If the ringbuffer is full the data is not written.
+ *	Writes data to the ringbuffer
+ *	NOTE: If the ringbuffer is full, data will not be written. 
+ *
+ *	data: The data to be written.
  */
 inline void rb_write(volatile struct ringbuffer_t *rb, uint8_t data) {
 	/* check if full */
@@ -74,7 +79,8 @@ inline void rb_write(volatile struct ringbuffer_t *rb, uint8_t data) {
 
 
 /*
- *	Gets the next byte from the ringbuffer
+ *	Reads the next data from the ringbuffer
+ *	Returns: 0, if the buffer is empty. Next data otherwise.
  */
 inline uint8_t rb_read(volatile struct ringbuffer_t *rb)
 {
