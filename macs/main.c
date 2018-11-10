@@ -9,9 +9,9 @@
 #include <stdlib.h>
 #include <util/delay.h>
 #include "units/execution.h"
-#include "serial/serial.h"
+#include "driver/uart/uart_driver.h"
 #include "torquer/torquer.h"
-#include "parser.h"
+#include "parser/parser.h"
 
 int main(void)
 {

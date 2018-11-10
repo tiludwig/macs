@@ -10,8 +10,9 @@
 #define EXECUTION_H_
 
 #include <avr/io.h>
-#include "../parser.h"
-#include "../torquer/torquer.h"
+
+#include <parser/parser.h>
+#include <torquer/torquer.h>
 
 
 extern uint8_t fastmap(uint8_t original);

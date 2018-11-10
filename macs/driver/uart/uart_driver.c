@@ -5,7 +5,7 @@
  *  Author: Tim
  */ 
 #include <avr/interrupt.h>
-#include "serial.h"
+#include "uart_driver.h"
 #include "ringbuffer.h"
 
 volatile struct ringbuffer_t rb_recv;
