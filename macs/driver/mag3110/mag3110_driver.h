@@ -51,6 +51,8 @@ struct mag3110_result_t
  */
 uint8_t mag3110_init();
 
+int8_t mag3110_isConnected();
+
 /*
  *	Takes a measurement from the MAG3110
  *	

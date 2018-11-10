@@ -24,6 +24,7 @@
 #include "mag3110_driver.h"
 #include "mag3110_defines.h"
 #include <avr/interrupt.h>
+#include <util/twi.h>
 
 /*
  *	Measurement ready interrupt
@@ -50,7 +51,75 @@ ISR(INT0_vect)
  */
 uint8_t mag3110_init()
 {
+	// Initialize TWI peripheral to i2c standard mode (100kbit/s)
+	TWBR = 72;			// bit rate
+	TWSR = 0;			// prescaler = 1
+	TWCR = (1 << TWEN);	// enable twi peripheral
+	
 	return 0;
+}
+
+int8_t mag3110_isConnected()
+{
+	// query device id
+	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
+	
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if ((TWSR & 0xF8) != TW_START)
+		return -1;
+		
+	// load register address 
+	TWDR = MAG3110_WRITE_ADDRESS;
+	TWCR = (1<<TWINT) | (1<<TWEN);
+	
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK)
+		return -2;
+		
+	TWDR = WHO_AM_I;
+	TWCR = (1<<TWINT) | (1<<TWEN);
+	
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if ((TWSR & 0xF8) != TW_MT_SLA_ACK)
+		return -3;
+	
+	// send repeated start and read
+	TWCR = (1<<TWINT) | (1 << TWSTA) | (1<<TWEN);
+	
+	while  (!(TWCR & (1<<TWINT)));
+	if ((TWSR & 0xF8) != TW_REP_START)
+		return -4;
+
+	// load register address
+	TWDR = MAG3110_READ_ADDRESS;	
+	TWCR = (1<<TWINT) | (1<<TWEN);
+		
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if ((TWSR & 0xF8) != TW_MR_SLA_ACK)
+		return -5;
+	
+	TWCR = (1<<TWINT) | (1<<TWEN);
+		
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if ((TWSR & 0xF8) != TW_MR_DATA_NACK)
+		return -6;
+	
+	uint8_t device_id = TWDR;
+	
+	// send stop
+	TWCR = (1<<TWINT) | (1 << TWSTO) | (1<<TWEN);
+	
+	while  (!(TWCR & (1<<TWINT)));
+	
+	if(device_id == MAG3110_DEVICE_ID)
+		return 0;
+	
+	return -7;
 }
 
 /*

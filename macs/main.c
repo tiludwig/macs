@@ -30,6 +30,7 @@
 #include <util/delay.h>
 #include "units/execution.h"
 #include "driver/uart/uart_driver.h"
+#include "driver/mag3110/mag3110_driver.h"
 #include "torquer/torquer.h"
 #include "parser/parser.h"
 
