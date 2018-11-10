@@ -75,9 +75,9 @@ int main(void)
 				{
 					executeCommand(&setp);
 					// store last command executed
-					lastExecutedCmd.x = setp.x:
-					lastExecutedCmd.y = setp.y:
-					lastExecutedCmd.z = setp.z:
+					lastExecutedCmd.x = setp.x;
+					lastExecutedCmd.y = setp.y;
+					lastExecutedCmd.z = setp.z;
 				}
 				index = 0;
 			}

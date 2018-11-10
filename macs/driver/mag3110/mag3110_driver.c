@@ -61,5 +61,7 @@ uint8_t mag3110_init()
  */
 struct mag3110_result_t mag3110_takeMeasurement()
 {
-	return struct mag3110_result_t;
+	struct mag3110_result_t measurements = {0, 0, 0};
+	
+	return measurements;
 }
