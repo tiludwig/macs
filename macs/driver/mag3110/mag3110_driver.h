@@ -26,6 +26,10 @@
 #define MAG3110_DRIVER_H_
 
 #define GLOBAL_FLAGS	_SFR_IO8(0x1E)
+#define MAG_INT_DDR		DDRD
+#define MAG_INT_PORT	PORTD
+#define MAG_INT_PIN		PD2
+
 
 #include <avr/io.h>
 

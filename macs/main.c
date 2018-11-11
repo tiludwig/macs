@@ -34,29 +34,105 @@
 #include "torquer/torquer.h"
 #include "parser/parser.h"
 
+/*
+ *	Local 
+ */
+static struct setpoint_t lastExecutedCmd;
+
+
 int main(void)
 {
 	serial_init(MAKE_UBRR);
 	serial_puts("MACS FW V1.0 OCT 2018\r");
-	serial_puts("Configuring sensor.................");
-	
-	if(mag3110_init() == 1)
+	if(mag3110_init() == 0)
 	{
-		serial_puts("..OK\r");
-	}
-	else
-	{
-		serial_puts("FAIL\r");
-		serial_puts("Check connection and reset device!\r");
+		serial_puts("MAG FAILURE. PLEASE RESET DEVICE.\r");
 		while(1);
 	}
+	serial_puts("MAG OK.\r");
 	
-	while(1)
-	{
-		// try to take a measurement
-		mag3110_takeMeasurement();
-		serial_puts("done.\r");
-		_delay_ms(1000);
-	}
+	yTorquerInitialize();
+	xTorquerInitialize();
+	zTorquerInitialize();
+	
+	torquerDisableSleep();
+	
+	uint8_t index = 0;
+	char buffer[32];
+	struct setpoint_t setp;
+	
+	uint16_t lastMeasurementTime = getTimestamp();
+	uint16_t currentTime;
+	enum MEASURESTATE {IDLE, START_MEASUREMENT, MEASUREMENT_FINISHED, STARTING_TORQER};
+	enum MEASURESTATE measureState = IDLE;
+    while (1) 
+    {	
+		currentTime = getTimestamp();
+		if(serial_available())
+		{
+			char data = serial_getchar();
+			if(data != '\r' && data != '\n')
+			{
+				buffer[index++] = data;
+			}
+			else
+			{
+				buffer[index] = '\0';
+				if(parseString(buffer, &setp) == PARSER_OK)
+				{
+					executeCommand(&setp);
+					// store last command executed
+					lastExecutedCmd.x = setp.x;
+					lastExecutedCmd.y = setp.y;
+					lastExecutedCmd.z = setp.z;
+				}
+				index = 0;
+			}
+		}
+		
+		switch(measureState)
+		{
+			case IDLE:
+			{
+				if((currentTime - lastMeasurementTime) >= 39063)
+				{
+					lastMeasurementTime = currentTime;
+					//serial_puts("Stoping torquer.\r");
+					torquerDisableAll();
+					measureState = START_MEASUREMENT;
+				}
+				break;
+			}
+			case START_MEASUREMENT:
+			{
+				if((currentTime - lastMeasurementTime) >= 196)
+				{
+					lastMeasurementTime = currentTime;
+					mag3110_takeMeasurement();
+					measureState = MEASUREMENT_FINISHED;
+				}
+				break;
+			}
+			case MEASUREMENT_FINISHED:
+			{
+				// replay last command executed
+				torquerDisableSleep();
+				executeCommand(&lastExecutedCmd);
+					
+				measureState = STARTING_TORQER;
+				break;
+			}
+			case STARTING_TORQER:
+			{
+				if((currentTime - lastMeasurementTime) >= 196)
+				{
+					lastMeasurementTime = currentTime;
+					//serial_puts("nominal operation.\r");
+					measureState = IDLE;
+				}
+				break;
+			}
+		}
+    }
 }
 
