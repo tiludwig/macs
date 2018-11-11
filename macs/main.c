@@ -30,106 +30,33 @@
 #include <util/delay.h>
 #include "units/execution.h"
 #include "driver/uart/uart_driver.h"
+#include "driver/mag3110/mag3110_driver.h"
 #include "torquer/torquer.h"
 #include "parser/parser.h"
-
-/*
- *	Local 
- */
-static struct setpoint_t lastExecutedCmd;
-
 
 int main(void)
 {
 	serial_init(MAKE_UBRR);
 	serial_puts("MACS FW V1.0 OCT 2018\r");
-		
-	yTorquerInitialize();
-	xTorquerInitialize();
-	zTorquerInitialize();
+	serial_puts("Configuring sensor.................");
 	
-	torquerDisableSleep();
+	if(mag3110_init() == 1)
+	{
+		serial_puts("..OK\r");
+	}
+	else
+	{
+		serial_puts("FAIL\r");
+		serial_puts("Check connection and reset device!\r");
+		while(1);
+	}
 	
-	uint8_t index = 0;
-	char buffer[32];
-	struct setpoint_t setp;
-	
-	uint16_t lastMeasurementTime = getTimestamp();
-	uint16_t currentTime;
-	enum MEASURESTATE {IDLE, STOPING_TORQUER, MEASURING, STARTING_TORQER};
-	enum MEASURESTATE measureState = IDLE;
-    while (1) 
-    {	
-		currentTime = getTimestamp();
-		if(serial_available())
-		{
-			char data = serial_getchar();
-			if(data != '\r' && data != '\n')
-			{
-				buffer[index++] = data;
-			}
-			else
-			{
-				buffer[index] = '\0';
-				if(parseString(buffer, &setp) == PARSER_OK)
-				{
-					executeCommand(&setp);
-					// store last command executed
-					lastExecutedCmd.x = setp.x;
-					lastExecutedCmd.y = setp.y;
-					lastExecutedCmd.z = setp.z;
-				}
-				index = 0;
-			}
-		}
-		
-		switch(measureState)
-		{
-			case IDLE:
-			{
-				if((currentTime - lastMeasurementTime) >= 65000)
-				{
-					lastMeasurementTime = currentTime;
-					//serial_puts("Stoping torquer.\r");
-					torquerDisableAll();
-					measureState = STOPING_TORQUER;
-				}
-				break;
-			}
-			case STOPING_TORQUER:
-			{
-				if((currentTime - lastMeasurementTime) >= 196)
-				{
-					//serial_puts("starting measurement.\r");
-					measureState = MEASURING;
-				}
-				break;
-			}
-			case MEASURING:
-			{
-
-				if((currentTime - lastMeasurementTime) >= 2*196)
-				{
-					//serial_puts("starting torquers.\r");
-					
-					// replay last command executed
-					torquerDisableSleep();
-					executeCommand(&lastExecutedCmd);
-					
-					measureState = STARTING_TORQER;
-				}
-				break;
-			}
-			case STARTING_TORQER:
-			{
-				if((currentTime - lastMeasurementTime) >= 3*196)
-				{
-					//serial_puts("nominal operation.\r");
-					measureState = IDLE;
-				}
-				break;
-			}
-		}
-    }
+	while(1)
+	{
+		// try to take a measurement
+		mag3110_takeMeasurement();
+		serial_puts("done.\r");
+		_delay_ms(1000);
+	}
 }
 
