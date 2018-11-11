@@ -24,7 +24,7 @@
 #include "mag3110_driver.h"
 #include "mag3110_defines.h"
 #include <avr/interrupt.h>
-#include <util/twi.h>
+#include <driver/twi/twi.h>
 
 /*
  *	Measurement ready interrupt
@@ -44,82 +44,52 @@ ISR(INT0_vect)
 /*
  *	Initializes the MAG3110 to the following mode:
  *	
+ *	Mode:				Active
  *	Frequency:			0.63Hz
  *  Over-sampling rate: 128 (reduces output data rate to 0.08Hz)
- *  Reset:				automatic reset before every measurement
- *	Output format:		raw (no user offset correction)
+ *  Reset:				Automatic reset before every measurement
+ *	Output format:		With offset correction
  */
 uint8_t mag3110_init()
 {
-	// Initialize TWI peripheral to i2c standard mode (100kbit/s)
-	TWBR = 72;			// bit rate
-	TWSR = 0;			// prescaler = 1
-	TWCR = (1 << TWEN);	// enable twi peripheral
+	twi_init();	
 	
-	return 0;
+	// check if magnetometer is connected
+	if(mag3110_isConnected() == 0)
+	{
+		return 0;
+	}
+	
+	// connected -> configure magnetometer
+	uint8_t offsets[] = {0xF5, 0x46, 0xD, 0x12, 0x8, 0x1C};
+	// apply user correction
+	if(twi_writeByteArrayToAddress(MAG3110_ADDRESS, OFF_X_MSB, offsets, 6) == TWI_DRIVER_FAIL)
+	{
+		return 0;
+	}
+	
+	
+	uint8_t ctrl_reg[2];
+	ctrl_reg[0] = (7 << CTRL1_DR0) | (3 << CTRL1_OS0) | (1 << CTRL1_AC);
+	ctrl_reg[1] = (1 << CTRL2_AUTO_MRST_EN);
+	
+	if(twi_writeByteArrayToAddress(MAG3110_ADDRESS, CTRL_REG1, ctrl_reg, 2) == TWI_DRIVER_FAIL)
+	{
+		return 0;
+	}
+		 
+	
+ 	return 1;
 }
 
 int8_t mag3110_isConnected()
 {
-	// query device id
-	TWCR = (1 << TWINT) | (1 << TWSTA) | (1 << TWEN);
+	if(twi_requestByteFrom(MAG3110_ADDRESS, WHO_AM_I) == MAG3110_DEVICE_ID)
+	{
+		return 1;
+	}
 	
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if ((TWSR & 0xF8) != TW_START)
-		return -1;
-		
-	// load register address 
-	TWDR = MAG3110_WRITE_ADDRESS;
-	TWCR = (1<<TWINT) | (1<<TWEN);
-	
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if ((TWSR & 0xF8) != TW_MT_SLA_ACK)
-		return -2;
-		
-	TWDR = WHO_AM_I;
-	TWCR = (1<<TWINT) | (1<<TWEN);
-	
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if ((TWSR & 0xF8) != TW_MT_SLA_ACK)
-		return -3;
-	
-	// send repeated start and read
-	TWCR = (1<<TWINT) | (1 << TWSTA) | (1<<TWEN);
-	
-	while  (!(TWCR & (1<<TWINT)));
-	if ((TWSR & 0xF8) != TW_REP_START)
-		return -4;
-
-	// load register address
-	TWDR = MAG3110_READ_ADDRESS;	
-	TWCR = (1<<TWINT) | (1<<TWEN);
-		
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if ((TWSR & 0xF8) != TW_MR_SLA_ACK)
-		return -5;
-	
-	TWCR = (1<<TWINT) | (1<<TWEN);
-		
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if ((TWSR & 0xF8) != TW_MR_DATA_NACK)
-		return -6;
-	
-	uint8_t device_id = TWDR;
-	
-	// send stop
-	TWCR = (1<<TWINT) | (1 << TWSTO) | (1<<TWEN);
-	
-	while  (!(TWCR & (1<<TWINT)));
-	
-	if(device_id == MAG3110_DEVICE_ID)
-		return 0;
-	
-	return -7;
+	return 0;
 }
 
 /*
@@ -131,7 +101,50 @@ int8_t mag3110_isConnected()
  */
 struct mag3110_result_t mag3110_takeMeasurement()
 {
-	struct mag3110_result_t measurements = {0, 0, 0};
+	struct mag3110_result_t measurements = {0xFFFF, 0xFFFF, 0xFFFF};
+	
+	// trigger measurement
+	uint8_t ctrl_reg1 = 0xFB;
+	if(twi_writeByteToAddress(MAG3110_ADDRESS, CTRL_REG1, ctrl_reg1) == TWI_DRIVER_FAIL)
+	{
+		return measurements;
+	}
+	
+	int numberOfAxisRead = 0;
+	uint8_t status = 0;
+	while(numberOfAxisRead != 3)
+	{
+		status = twi_requestByteFrom(MAG3110_ADDRESS, DR_STATUS);
+		if(status & (1 << STATUS_ZYXDR))
+		{
+			// try to read x
+			if(status & (1 << STATUS_XDR))
+			{
+				uint8_t buffer[2];
+				twi_RequestMultiByteFrom(MAG3110_ADDRESS, OUT_X_MSB, buffer, 2);
+				measurements.x = ((uint16_t)buffer[0] << 8) | buffer[1];
+				numberOfAxisRead++;
+			}
+			
+			// try to read y
+			if(status & (1 << STATUS_YDR))
+			{
+				uint8_t buffer[2];
+				twi_RequestMultiByteFrom(MAG3110_ADDRESS, OUT_Y_MSB, buffer, 2);
+				measurements.y = ((uint16_t)buffer[0] << 8) | buffer[1];
+				numberOfAxisRead++;
+			}
+			
+			// try to read z
+			if(status & (1 << STATUS_YDR))
+			{
+				uint8_t buffer[2];
+				twi_RequestMultiByteFrom(MAG3110_ADDRESS, OUT_Z_MSB, buffer, 2);
+				measurements.z = ((uint16_t)buffer[0] << 8) | buffer[1];
+				numberOfAxisRead++;
+			}
+		}
+	}
 	
 	return measurements;
 }

@@ -29,8 +29,6 @@
 
 
 #define MAG3110_ADDRESS			0x0E
-#define MAG3110_READ_ADDRESS	((MAG3110_ADDRESS << 1) | 0x0)
-#define MAG3110_WRITE_ADDRESS	((MAG3110_ADDRESS << 1) | 0x1)
 
 #define DR_STATUS				0x00
 #define OUT_X_MSB				0x01

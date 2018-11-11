@@ -138,6 +138,12 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="driver\twi\twi.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="driver\twi\twi.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="driver\mag3110\mag3110_defines.h">
       <SubType>compile</SubType>
     </Compile>
@@ -183,6 +189,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="driver\mag3110" />
+    <Folder Include="driver\twi" />
     <Folder Include="driver\uart\" />
     <Folder Include="driver" />
     <Folder Include="parser" />
