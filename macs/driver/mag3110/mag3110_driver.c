@@ -25,6 +25,7 @@
 #include "mag3110_defines.h"
 #include <avr/interrupt.h>
 #include <driver/twi/twi.h>
+#include <util/delay.h>
 
 /*
  *	Measurement ready interrupt
@@ -52,7 +53,8 @@ ISR(INT0_vect)
  */
 uint8_t mag3110_init()
 {
-	twi_init();	
+	_delay_ms(2);
+	twi_init();
 	
 	// check if magnetometer is connected
 	if(mag3110_isConnected() == 0)

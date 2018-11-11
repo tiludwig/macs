@@ -25,11 +25,11 @@
 #include <util/twi.h>
 
 /*
- *	Initialize the twi to 100kb/s
+ *	Initialize the twi to 400kb/s
  */
 uint8_t twi_init()
 {
-	TWBR = 72;
+	TWBR = 12;
 	TWSR = 0;
 	return TWI_DRIVER_OK;
 }
