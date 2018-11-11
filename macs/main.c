@@ -38,7 +38,25 @@
  *	Local 
  */
 static struct setpoint_t lastExecutedCmd;
+enum MEASURESTATE {IDLE, START_MEASUREMENT, MEASUREMENT_FINISHED, STARTING_TORQER};
 
+
+
+
+void sendbackMeasurement(struct mag3110_result_t *measurement)
+{
+	char buffer[7];
+	serial_puts("M ");
+	itoa(measurement->x, buffer, 10);
+	serial_puts(buffer);
+	serial_putc(' ');
+	itoa(measurement->y, buffer, 10);
+	serial_puts(buffer);
+	serial_putc(' ');
+	itoa(measurement->z, buffer, 10);
+	serial_puts(buffer);
+	serial_putc('\r');
+}
 
 int main(void)
 {
@@ -63,7 +81,7 @@ int main(void)
 	
 	uint16_t lastMeasurementTime = getTimestamp();
 	uint16_t currentTime;
-	enum MEASURESTATE {IDLE, START_MEASUREMENT, MEASUREMENT_FINISHED, STARTING_TORQER};
+	
 	enum MEASURESTATE measureState = IDLE;
     while (1) 
     {	
@@ -108,7 +126,8 @@ int main(void)
 				if((currentTime - lastMeasurementTime) >= 196)
 				{
 					lastMeasurementTime = currentTime;
-					mag3110_takeMeasurement();
+					struct mag3110_result_t measure = mag3110_takeMeasurement();
+					sendbackMeasurement(&measure);
 					measureState = MEASUREMENT_FINISHED;
 				}
 				break;
