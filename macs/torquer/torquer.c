@@ -307,6 +307,9 @@ void zTorquerSetDutyCycle(uint8_t dutyCycle)
 	{
 		zTorquerDisable();
 	}
+	if(dutyCycle > 229)
+		dutyCycle = 229;
+	
 	OCR0A = dutyCycle;
 	OCR0B = dutyCycle;
 }
