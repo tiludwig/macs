@@ -35,13 +35,9 @@
 #include "parser/parser.h"
 
 /*
- *	Local 
+ *	Last executed command
  */
 static struct setpoint_t lastExecutedCmd;
-enum MEASURESTATE {IDLE, START_MEASUREMENT, MEASUREMENT_FINISHED, STARTING_TORQER};
-
-
-
 
 void sendbackMeasurement(struct mag3110_result_t *measurement)
 {
@@ -62,11 +58,6 @@ int main(void)
 {
 	serial_init(MAKE_UBRR);
 	serial_puts("MACS FW V1.0 OCT 2018\r");
-	if(mag3110_init() == 0)
-	{
-		serial_puts("MAG FAILURE. PLEASE RESET DEVICE.\r");
-		while(1);
-	}
 	serial_puts("MAG OK.\r");
 	
 	yTorquerInitialize();
@@ -74,18 +65,12 @@ int main(void)
 	zTorquerInitialize();
 	
 	torquerDisableSleep();
-	
 	uint8_t index = 0;
 	char buffer[32];
 	struct setpoint_t setp;
 	
-	uint16_t lastMeasurementTime = getTimestamp();
-	uint16_t currentTime;
-	
-	enum MEASURESTATE measureState = IDLE;
     while (1) 
-    {	
-		currentTime = getTimestamp();
+    {
 		if(serial_available())
 		{
 			char data = serial_getchar();
@@ -105,51 +90,6 @@ int main(void)
 					lastExecutedCmd.z = setp.z;
 				}
 				index = 0;
-			}
-		}
-		
-		switch(measureState)
-		{
-			case IDLE:
-			{
-				if((currentTime - lastMeasurementTime) >= 39063)
-				{
-					lastMeasurementTime = currentTime;
-					//serial_puts("Stoping torquer.\r");
-					torquerDisableAll();
-					measureState = START_MEASUREMENT;
-				}
-				break;
-			}
-			case START_MEASUREMENT:
-			{
-				if((currentTime - lastMeasurementTime) >= 196)
-				{
-					lastMeasurementTime = currentTime;
-					struct mag3110_result_t measure = mag3110_takeMeasurement();
-					sendbackMeasurement(&measure);
-					measureState = MEASUREMENT_FINISHED;
-				}
-				break;
-			}
-			case MEASUREMENT_FINISHED:
-			{
-				// replay last command executed
-				torquerDisableSleep();
-				executeCommand(&lastExecutedCmd);
-					
-				measureState = STARTING_TORQER;
-				break;
-			}
-			case STARTING_TORQER:
-			{
-				if((currentTime - lastMeasurementTime) >= 196)
-				{
-					lastMeasurementTime = currentTime;
-					//serial_puts("nominal operation.\r");
-					measureState = IDLE;
-				}
-				break;
 			}
 		}
     }
