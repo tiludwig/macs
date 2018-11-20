@@ -108,7 +108,7 @@
   <avrgcc.compiler.symbols.DefSymbols>
     <ListValues>
       <Value>DEBUG</Value>
-      <Value>F_CPU=16000000</Value>
+      <Value>F_CPU=8000000</Value>
       <Value>BAUD=9600</Value>
     </ListValues>
   </avrgcc.compiler.symbols.DefSymbols>
