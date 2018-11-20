@@ -65,7 +65,7 @@ static short str2short(const char *buffer)
 uint8_t parseString(char* buffer, struct setpoint_t *setp)
 {
 	char* token = strtok(buffer, " ");
-	if (strcmp(token, "D") != 0)
+	if (*token != 'D')
 	{
 		return PARSER_FAIL;
 	}
@@ -82,6 +82,22 @@ uint8_t parseString(char* buffer, struct setpoint_t *setp)
 		}
 		dm[i] = str2short(token);
 	}
+	
+	// check boundaries
+	if(dm[0] > 200)
+		dm[0] = 200;
+	else if(dm[0] < -200)
+		dm[0] = -200;
+	
+	if(dm[1] > 200)
+		dm[1] = 200;
+	else if(dm[1] < -200)
+		dm[1] = -200;
+	
+	if(dm[2] > 200)
+		dm[2] = 200;
+	else if(dm[2] < -200)
+		dm[2] = -200;
 	
 	setp->x = dm[0];
 	setp->y = dm[1];
