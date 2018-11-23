@@ -34,7 +34,7 @@
 #include <torquer/torquer.h>
 
 /*
- *	Maps the [0, 200] input range to the [0, 255] output range
+ *	Maps the [0, 200] input range to the [145, 255] output range
  *
  *	This function is implemented using assembler, see fastmap.s
  *	for further information about the mapping algorithm.
